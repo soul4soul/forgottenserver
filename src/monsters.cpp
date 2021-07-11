@@ -604,6 +604,22 @@ bool Monsters::deserializeSpell(MonsterSpell* spell, spellBlock_t& sb, const std
 			combat->setArea(area);
 		}
 
+		if (spell->conditionType != CONDITION_NONE) {
+			ConditionType_t conditionType = spell->conditionType;
+
+			uint32_t tickInterval = 2000;
+			if (spell->tickInterval != 0) {
+				tickInterval = spell->tickInterval;
+			}
+
+			int32_t conMinDamage = std::abs(spell->conditionMinDamage);
+			int32_t conMaxDamage = std::abs(spell->conditionMaxDamage);
+			int32_t startDamage = std::abs(spell->conditionStartDamage);
+
+			Condition* condition = getDamageCondition(conditionType, conMaxDamage, conMinDamage, startDamage, tickInterval);
+			combat->addCondition(condition);
+		}
+
 		std::string tmpName = asLowerCaseString(spell->name);
 
 		if (tmpName == "melee") {
@@ -612,22 +628,6 @@ bool Monsters::deserializeSpell(MonsterSpell* spell, spellBlock_t& sb, const std
 			if (spell->attack > 0 && spell->skill > 0) {
 				sb.minCombatValue = 0;
 				sb.maxCombatValue = -Weapons::getMaxMeleeDamage(spell->skill, spell->attack);
-			}
-
-			if (spell->conditionType != CONDITION_NONE) {
-				ConditionType_t conditionType = spell->conditionType;
-
-				uint32_t tickInterval = 2000;
-				if (spell->tickInterval != 0) {
-					tickInterval = spell->tickInterval;
-				}
-
-				int32_t conMinDamage = std::abs(spell->conditionMinDamage);
-				int32_t conMaxDamage = std::abs(spell->conditionMaxDamage);
-				int32_t startDamage = std::abs(spell->conditionStartDamage);
-
-				Condition* condition = getDamageCondition(conditionType, conMaxDamage, conMinDamage, startDamage, tickInterval);
-				combat->addCondition(condition);
 			}
 
 			sb.range = 1;
@@ -639,22 +639,6 @@ bool Monsters::deserializeSpell(MonsterSpell* spell, spellBlock_t& sb, const std
 			if (spell->combatType == COMBAT_UNDEFINEDDAMAGE) {
 				std::cout << "[Warning - Monsters::deserializeSpell] - " << description << " - spell has undefined damage" << std::endl;
 				combat->setParam(COMBAT_PARAM_TYPE, COMBAT_PHYSICALDAMAGE);
-			}
-
-			if (spell->conditionType != CONDITION_NONE) {
-				ConditionType_t conditionType = spell->conditionType;
-
-				uint32_t tickInterval = 2000;
-				if (spell->tickInterval != 0) {
-					tickInterval = spell->tickInterval;
-				}
-
-				int32_t conMinDamage = std::abs(spell->conditionMinDamage);
-				int32_t conMaxDamage = std::abs(spell->conditionMaxDamage);
-				int32_t startDamage = std::abs(spell->conditionStartDamage);
-
-				Condition* condition = getDamageCondition(conditionType, conMaxDamage, conMinDamage, startDamage, tickInterval);
-				combat->addCondition(condition);
 			}
 
 			if (spell->combatType == COMBAT_PHYSICALDAMAGE) {
@@ -748,20 +732,6 @@ bool Monsters::deserializeSpell(MonsterSpell* spell, spellBlock_t& sb, const std
 			if (spell->conditionType == CONDITION_NONE) {
 				std::cout << "[Error - Monsters::deserializeSpell] - " << description << " - Condition is not set for: " << spell->name << std::endl;
 			}
-
-			ConditionType_t conditionType = spell->conditionType;
-
-			uint32_t tickInterval = 2000;
-			if (spell->tickInterval != 0) {
-				tickInterval = spell->tickInterval;
-			}
-
-			int32_t conMinDamage = std::abs(spell->conditionMinDamage);
-			int32_t conMaxDamage = std::abs(spell->conditionMaxDamage);
-			int32_t startDamage = std::abs(spell->conditionStartDamage);
-
-			Condition* condition = getDamageCondition(conditionType, conMaxDamage, conMinDamage, startDamage, tickInterval);
-			combat->addCondition(condition);
 		} else if (tmpName == "strength") {
 			//
 		} else if (tmpName == "effect") {
