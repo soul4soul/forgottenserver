@@ -259,30 +259,6 @@ registerMonsterType.immunities = function(mtype, mask)
 		end
 	end
 end
-registerMonsterType.attacks = function(mtype, mask)
-	if type(mask.attacks) == "table" then
-		for _, attack in pairs(mask.attacks) do
-			local spell = AbilityTableToSpell(attack)
-			mtype:addAttack(spell)
-		end
-	end
-end
-registerMonsterType.defenses = function(mtype, mask)
-	if type(mask.defenses) == "table" then
-		if mask.defenses.defense then
-			mtype:defense(mask.defenses.defense)
-		end
-		if mask.defenses.armor then
-			mtype:armor(mask.defenses.armor)
-		end
-		for _, defense in pairs(mask.defenses) do
-			if type(defense) == "table" then
-				local spell = AbilityTableToSpell(defense)
-				mtype:addDefense(spell)
-			end
-		end
-	end
-end
 function AbilityTableToSpell(ability)
 	local spell = MonsterSpell()
 	if ability.name then
@@ -392,4 +368,28 @@ function AbilityTableToSpell(ability)
 		end
 	end
 	return spell
+end
+registerMonsterType.attacks = function(mtype, mask)
+	if type(mask.attacks) == "table" then
+		for _, attack in pairs(mask.attacks) do
+			local spell = AbilityTableToSpell(attack)
+			mtype:addAttack(spell)
+		end
+	end
+end
+registerMonsterType.defenses = function(mtype, mask)
+	if type(mask.defenses) == "table" then
+		if mask.defenses.defense then
+			mtype:defense(mask.defenses.defense)
+		end
+		if mask.defenses.armor then
+			mtype:armor(mask.defenses.armor)
+		end
+		for _, defense in pairs(mask.defenses) do
+			if type(defense) == "table" then
+				local spell = AbilityTableToSpell(defense)
+				mtype:addDefense(spell)
+			end
+		end
+	end
 end
