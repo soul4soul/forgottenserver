@@ -259,7 +259,7 @@ registerMonsterType.immunities = function(mtype, mask)
 		end
 	end
 end
-function AbilityTableToSpell(ability)
+local function AbilityTableToSpell(ability)
 	local spell = MonsterSpell()
 	if ability.name then
 		if ability.name == "melee" then
@@ -332,7 +332,6 @@ function AbilityTableToSpell(ability)
 		end
 		if ability.condition then
 			if ability.condition.type then
-				print(ability.condition.type)
 				spell:setConditionType(ability.condition.type)
 			end
 			local startDamage = 0
